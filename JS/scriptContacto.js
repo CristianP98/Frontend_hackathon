@@ -1,31 +1,37 @@
-function saveFormData() {
-    // Obtener valores de los campos
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    var tel = document.getElementById('tel').value;
+function guardarDatos() {
+    // Obtener los valores de los campos del formulario
+    var nombre = document.getElementById('name').value;
+    var correo = document.getElementById('email').value;
+    var telefono = document.getElementById('tel').value;
 
     // Crear un objeto con los datos del formulario
-    var formData = {
-        Nombre: name,
-        Email: email,
-        'Número de teléfono': tel
+    var userData = {
+        nombre: nombre,
+        correo: correo,
+        telefono: telefono
     };
 
-    // Convertir los datos a formato CSV
-    var csv = Object.keys(formData).map(key => `${key},${formData[key]}`).join('\n');
+    // Convertir el objeto a formato JSON
+    var jsonData = JSON.stringify(userData);
 
-    // Crear un enlace de descarga para el archivo CSV
-    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    var link = document.createElement('a');
-    if (link.download !== undefined) { // Verificar soporte para la descarga
-        var url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'formulario.csv');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        alert('Descarga de archivos no soportada en este navegador.');
-    }
+    // Crear un Blob con los datos JSON
+    var blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Crear un objeto URL para el Blob
+    var url = URL.createObjectURL(blob);
+
+    // Crear un elemento <a> para el enlace de descarga
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'datos_usuario.json';
+
+    // Agregar el elemento <a> al DOM
+    document.body.appendChild(a);
+
+    // Simular un clic en el enlace para iniciar la descarga
+    a.click();
+
+    // Limpiar después de la descarga
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
